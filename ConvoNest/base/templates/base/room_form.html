@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+<!-- Block content is used to override the content block in the base.html file -->
+{% block content %}
+
+<div>
+    <!-- Form method and action are used to send the form data to the server -->
+    <form method = "POST" action="">
+        <!-- Cross Site Request Forgery Protection -->
+        {% csrf_token %}
+        <!-- To have the form in a proper paragraph format, use form.as_p -->
+        {{form.as_p}} 
+        <input type="submit" value="Create Room">    
+    </form>
+</div>
+
+
+{% endblock content %}

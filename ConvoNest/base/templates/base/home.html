@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .home-container {
+        display: grid;
+        /* This will create a 2 column grid */
+        grid-template-columns: 1fr 3fr;
+    }
+</style>
+
+
+<h1>ConvoNest - Home</h1>
+
+<div class = "home-container">
+    <div>
+        <h3>Browse Topics</h3>
+        <hr>
+    </div>
+
+    <div>
+        <a href="{% url 'create-room' %}">Create Room</a>
+        <hr>    
+        <div>
+            {% for room in rooms %}
+                <div>
+                    <a href = "{% url 'update-room' room.id %}">Update Room</a>
+                    <a href = "{% url 'delete-room' room.id %}">Delete Room</a>
+                    <span>@{{room.host.username}}</span>
+                    <h1>{{room.id}} -- <a href="{% url 'room' room.id %}">{{room.name}}</a></h1>
+                    <small>{{room.topic}}</small>
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
