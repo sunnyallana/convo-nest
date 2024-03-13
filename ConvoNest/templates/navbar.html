@@ -12,6 +12,7 @@
 
 <!-- request.user is a built-in Django template tag that returns the user object of the currently logged in user. If the user is not logged in, it returns an AnonymousUser object. -->
 {% if request.user.is_authenticated %}
+    <p>Hello, {{request.user}}</p>
     <a href="{% url 'logout' %}">Logout</a>
 {% else %}
     <a href="{% url 'login' %}">Login</a>

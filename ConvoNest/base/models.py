@@ -13,7 +13,7 @@ class Room(models.Model):
     host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True, blank=True)
     
-    #Participants
+    participants = models.ManyToManyField(User, related_name='participants', blank=True) # We couldn't just use only the User model as the first parameter because it is already being used as the first parameter in the host field. So we use the related_name parameter to specify the name of the reverse relation from the User model to the Room model. 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     
@@ -29,13 +29,11 @@ class Room(models.Model):
         return self.name
     
 class Messages(models.Model):
-    #Room
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    #Text
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    text = models.TextField()
+    content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.text[:50]
+        return self.content[:50]
