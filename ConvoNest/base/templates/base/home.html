@@ -14,22 +14,8 @@
 <h1>ConvoNest - Home</h1>
 
 <div class = "home-container">
-
-
     <div>
-        <h3>Browse Topics</h3>
-        <hr>
-
-        <div>
-            <a href="{% url 'home' %}">All</a>
-        </div>
-
-        {% for topic in topics %}
-        <div>    
-            <a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
-            <br>
-        </div>
-        {% endfor %}
+        {% include 'base/topics_component.html' %}
     </div>
 
     <div>
@@ -37,39 +23,12 @@
         <a href="{% url 'create-room' %}">Create Room</a>
         <hr>    
         <div>
-            {% for room in rooms %}
-                <div>
-                    {% if request.user == room.host %}
-                    <a href = "{% url 'update-room' room.id %}">Update Room</a>
-                    <a href = "{% url 'delete-room' room.id %}">Delete Room</a>
-                    {% endif %}
-                    <span>@{{room.host.username}}</span>
-                    <h1>{{room.id}} -- <a href="{% url 'room' room.id %}">{{room.name}}</a></h1>
-                    <small>{{room.topic.name}}</small>
-                    <hr>
-                </div>
-            {% endfor %}
+            {% include 'base/feed_component.html' %}
         </div>
     </div>
 
     <div>
-        <h3>Recent Activity</h3>
-        <hr>
-        {% for message in room_messages %}
-            <div>
-                <small>@{{message.user}} {{message.created|timesince}} </small>
-                <small>Replied to "{{message.room}}"</small>
-                <!-- Instead of writing message.content, we can use message to call the __str__ method in the Message model -->
-                <p>{{message}}</p>
-                {% if request.user == message.user %}
-                <a href="{% url 'delete-message' message.id %}">Delete</a>
-                {% endif %}
-                <hr>
-            </div>
-        {% endfor %}
-
-
-
+        {% include 'base/activity_component.html' %}
     </div>
 </div>
 {% endblock content %}

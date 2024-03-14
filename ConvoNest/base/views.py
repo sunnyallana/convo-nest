@@ -106,6 +106,17 @@ def room(request, pk):
                }
     return render(request, 'base/room.html', context)
 
+def userProfile(request, pk):
+    user = User.objects.get(id=pk)
+    rooms = user.room_set.all()
+    room_messages = user.messages_set.all()
+    topics = Topic.objects.all()
+    context = {'user': user,
+               'rooms': rooms,
+               'room_messages': room_messages,
+               'topics': topics,
+               }
+    return render(request, 'base/user_profile.html', context)
 
 @login_required(login_url='login')
 def createRoom(request):
@@ -114,11 +125,12 @@ def createRoom(request):
         # Instead of using the Room model directly, we use the RoomForm that we created in the forms.py file. This form is a ModelForm that is created from the Room model. We pass the request.POST to the form to create a new Room object.
         form = RoomForm(request.POST)
         if form.is_valid():
-            form.save()
+            room = form.save(commit=False) # Buying ourselves some time to modify the room object before saving it to the database.
+            room.host = request.user
+            room.save()
             return redirect('home')
     context = {'form': form}
     return render(request, 'base/room_form.html', context)
-
 
 @login_required(login_url='login')
 def updateRoom(request, pk):
