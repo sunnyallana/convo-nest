@@ -16,16 +16,18 @@
 
         <form class="form" action="" method="POST">
           {% csrf_token %}
+          {% if error_message %}
+          <div class="form__group">
+            <p class="error-message">{{ error_message }}</p>
+          </div>
+          {% endif %}
           <div class="form__group form__group">
-            <label for="room_name">Username</label>
-            <input id="username" name="username" type="text" placeholder="e.g. sunny_allana" />
+            <label for="email">Email</label>
+            <input required id="email" name="email" type="email" placeholder="e.g. sunny_allana@domain.com" />
           </div>
           <div class="form__group">
             <label for="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
+            <input required id="password" name="password" type="password"
               placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
             />
           </div>
@@ -71,6 +73,11 @@
 
         <form class="form" action="" method="POST">
           {% csrf_token %}
+          {% if error_message %}
+          <div class="form__group">
+            <p class="error-message">{{ error_message }}</p>
+          </div>
+          {% endif %}
           {% for field in form %}
           <div class="form__group form__group">
             <label for="room_name">{{field.label}}</label>
@@ -101,7 +108,7 @@
 
         <div class="auth__action">
           <p>Already have an account?</p>
-          <a href="{% url 'login' %}" class="btn btn--link">Sign Up</a>
+          <a href="{% url 'login' %}" class="btn btn--link">Login </a>
         </div>
       </div>
     </div>

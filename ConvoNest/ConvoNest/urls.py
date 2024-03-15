@@ -16,8 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('base.urls'))
+    path('', include('base.urls')),
+    path('api/', include('base.api.urls'))
 ]
+
+# This line is used to add a URL pattern for serving media files in development.
+# settings.MEDIA_URL is the URL that will be used to access the media files.
+# document_root=settings.MEDIA_ROOT specifies the directory where the media files are stored.
+# Note: This is not suitable for production use! For production, use a web server or a service like AWS S3 to serve static files.
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

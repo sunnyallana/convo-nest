@@ -1,60 +1,65 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
-from .models import Room, Topic, Messages
-from .forms import RoomForm, UserForm
+from .models import Room, Topic, Messages, User
+from .forms import RoomForm, UserForm, MyUserCreationForm
 from django.db.models import Q
 from django.http import HttpResponse
 
+
 def loginUser(request):
     page = 'login'
+    error_message = None  # Initialize error message variable
 
     if request.user.is_authenticated:
         return redirect('home')
 
     if request.method == 'POST':
-        username = request.POST.get('username').lower()
+        email = request.POST.get('email')
         password = request.POST.get('password')
         try:
-            user = User.objects.get(username=username)
-        except:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
             user = None
-            messages.error(request, 'User does not exist') # This is how you display a message to the user. The first argument is the request object, and the second argument is the message that you want to display. The message is displayed in the template using the messages framework.
+            error_message = 'User does not exist'  # Set error message
         
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'Username OR password is incorrect')
+            error_message = 'Email or password is incorrect'  # Set error message
+
     context = {
-        'page': page
+        'page': page,
+        'error_message': error_message  # Pass error message to template
     }
     return render(request, 'base/login_register.html', context)
+
 
 def logoutUser(request):
     logout(request)
     return redirect('login')
 
 def registerUser(request):
-    context = {
-        'form': UserCreationForm(),
-    }
+    error_message = None  # Initialize error message variable
+
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = MyUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False) # This creates a new user object from the form data, but does not save it to the database yet. This is useful when you want to modify the user object before saving it to the database.
+            user = form.save(commit=False) # Buying ourselves some time to modify the user object before saving it to the database.
             user.username = user.username.lower()
             user.save()
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, "An error occurred while registering the user. Please try again.")
+            error_message = "An error occurred while registering the user. Please try again."  # Set error message
+    
+    context = {
+        'form': MyUserCreationForm(),
+        'error_message': error_message  # Pass error message to template
+    }
     return render(request, 'base/login_register.html', context)
-
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -205,7 +210,9 @@ def updateUser(request):
     form = UserForm(instance=user)
 
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
+        # request.FILES is used here because the avatar field is an ImageField. We use request.FILES to get the file data from the form. We then pass the request
+        # instance parameter is used to specify the instance of the user object that we want to update. This is how we pre-fill the form with the data from the user object.
+        form = UserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             return redirect('user-profile', pk=user.id)

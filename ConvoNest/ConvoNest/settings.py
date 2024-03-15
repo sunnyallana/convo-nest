@@ -44,9 +44,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
+    'rest_framework',
+    'corsheaders',
 ]
 
+AUTH_USER_MODEL = 'base.user' # The AUTH_USER_MODEL setting in Django allows you to specify a custom user model for authentication instead of using the default User model provided by Django.
+
 MIDDLEWARE = [
+    
+    # corsheaders and its middleware are included to handle Cross-Origin Resource Sharing (CORS).
+    # CORS allows web applications on one domain to make requests to another domain.
+    # It's useful when you have a separate frontend and backend running on different domains and you want to make AJAX requests to your Django backend.
+    
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -126,11 +136,22 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# The MEDIA_URL setting specifies the base URL for user-uploaded files. It is used to construct the URL for the user-uploaded files. For example, if the user uploads an image with the name avatar.png, the URL for the image will be /images/avatar.png.
+MEDIA_URL = '/images/' 
+
+# The STATICFILES_DIRS setting tells Django where to look for static files that are not tied to a particular app.
 STATICFILES_DIRS = [
     BASE_DIR/'static'
  ]
+
+# The MEDIA_ROOT setting specifies the directory where user-uploaded files are stored.
+MEDIA_ROOT = BASE_DIR / 'static/images'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_ALL_ORIGINS = False # To not let everyone access the API

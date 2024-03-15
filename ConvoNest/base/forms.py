@@ -1,6 +1,12 @@
 from django.forms import ModelForm
-from .models import Room
-from django.contrib.auth.models import User
+from .models import Room, User
+from django.contrib.auth.forms import UserCreationForm
+
+class MyUserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['name','username', 'email', 'password1', 'password2']
+
 
 class RoomForm(ModelForm):
     # Meta is used to specify the model and the fields that we want to use in the form. In this case, we are using the Room model and the fields name, topic, and description.
@@ -13,5 +19,5 @@ class RoomForm(ModelForm):
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['avatar','username', 'email', 'bio']
         exclude = ['password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined']

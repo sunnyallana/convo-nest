@@ -16,7 +16,7 @@
                   ></path>
                 </svg>
               </a>
-              <h3>Study Room</h3>
+              <h3>Room</h3>
             </div>
 
             {% if request.user == room.host %}
@@ -66,10 +66,10 @@
                 <span>{{room.created|timesince}}</span>
               </div>
               <div class="room__hosted">
-                <p>{% url 'user-profile' room.host.id %}</p>
-                <a href="#" class="room__author">
+                <p>Hosted By</p>
+                <a href="{% url 'user-profile' room.host.id %}" class="room__author">
                   <div class="avatar avatar--small">
-                    <img src="https://randomuser.me/api/portraits/men/37.jpg" />
+                    <img src="{{room.host.avatar.url}}" />
                   </div>
                   <span>@{{room.host.username}}</span>
                 </a>
@@ -90,7 +90,7 @@
                     <div class="thread__author">
                       <a href="{% url 'user-profile' message.user.id %}" class="thread__authorInfo">
                         <div class="avatar avatar--small">
-                          <img src="https://randomuser.me/api/portraits/men/37.jpg" />
+                          <img src="{{message.user.avatar.url}}" />
                         </div>
                         <span>@{{message.user.username}}</span>
                       </a>
@@ -133,10 +133,10 @@
             {% for user in room_participants %}
             <a href="{% url 'user-profile' user.id %}" class="participant">
               <div class="avatar avatar--medium">
-                <img src="https://randomuser.me/api/portraits/men/37.jpg" />
+                <img src="{{user.avatar.url}}" />
               </div>
               <p>
-                {{user.username}}
+                {{user.name}}
                 <span>@{{user.username}}</span>
               </p>
             </a>

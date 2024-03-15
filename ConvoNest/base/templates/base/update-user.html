@@ -19,7 +19,8 @@
                 </div>
             </div>
             <div class="layout__body">
-                <form class="form" action="" method="POST">
+                <!-- enctype="multipart/form-data" is used to let the server know that the form data is going to be sent as a file. -->
+                <form class="form" action="" method="POST" enctype="multipart/form-data">
                   {% csrf_token %}
                   
                     {% for field in form %}
